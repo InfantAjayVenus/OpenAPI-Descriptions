@@ -1,0 +1,421 @@
+openapi: '3.0.3'
+info:
+  title: todo-rest-api
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      description: A bearer token obtained from the auth server
+      scheme: bearer
+      type: http
+      bearerFormat: JWT
+  schemas:
+    ProjectData:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        order:
+          type: number
+        color:
+          type: string
+        is_favourite:
+          type: boolean
+        is_inbox_project:
+          type: boolean
+          default: true
+        view_style:
+          type: string
+          enum:
+            - list
+            - board
+        parent_id:
+          type: string
+          nullable: true
+          default: null
+        creator_id:
+          type: string
+      example:
+        id: '123512343'
+        creator_id: '91823749'
+        name: 'Inbox'
+        order: 0
+        color: 'grey'
+        is_favourite: false
+        is_inbox_project: true
+        view_style: list
+        parent_id: null
+
+    ProjectRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        order:
+          type: number
+        color:
+          type: string
+        is_favourite:
+          type: string
+        is_inbox_project:
+          type: boolean
+          default: true
+        view_style:
+          type: string
+          enum:
+            - list
+            - board
+        parent_id:
+          type: string
+          nullable: true
+          default: null
+      example:
+       name: 'Inbox'
+       order: 0
+       color: 'grey'
+       is_favourite: false
+       is_inbox_project: true
+       view_style: list
+       parent_id: null
+
+    TaskData:
+      type: object
+      required:
+        - project_id
+        - order
+        - creator_id
+        - content
+      properties:
+        id:
+          type: string
+        project_id:
+          type: string
+        section_id:
+          type: string
+        parent_id:
+          type: string
+        order:
+          type: number
+        creator_id:
+          type: string
+        created_at:
+          type: string
+        content:
+          type: string
+        description:
+          type: string
+        is_completed:
+          type: boolean
+          default: false
+        labels:
+          type: array
+          items:
+            type: string
+        due:
+          type: object
+          properties:
+            date:
+              type: string
+            is_recurring:
+              type: boolean
+              default: false
+            datetime:
+              type: string
+            due_prompt:
+              type: string
+            timezone:
+              type: string
+      example:
+        creator_id: '2671355'
+        created_at: '2019-12-11T22:36:50.000000Z'
+        is_completed: false
+        content: Buy Milk
+        description: ''
+        due:
+          date: '2016-09-01'
+          is_recurring: false
+          datetime: '2016-09-01T12:00:00.000000Z'
+          due_prompt: tomorrow at 12
+          timezone: Europe/Moscow
+        id: '2995104339'
+        labels:
+        - Food
+        - Shopping
+        order: 1
+        project_id: '2203306141'
+        section_id: '7025'
+        parent_id: '2995104589'
+
+
+paths:
+  
+  /projects:
+    get:
+      operationId: getProjectsList
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectData"
+        '401':
+          description: Unauthorized request
+    post:
+      operationId: createNewProject
+      tags:
+        - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectRequest"
+      responses:
+        '200':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectData"
+        '400':
+          description: Name is a required field
+        '401':
+          description: Unauthorized request
+        '403':
+          description: User does not have permission for this operation
+        '409':
+          description: A resource with the same name already exists 
+
+  /projects/{projectId}:
+    get:
+      operationId: getProjectById
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          description: ID for which the project data is requested
+          schema:
+            type: string
+          required: true
+          in: path
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectData"
+        '400':
+          description: Request missing "projectId" in path
+        '401':
+          description: User must login to make this request
+        '403':
+          description: User does not have permission to access this resource
+        '404':
+          description: Requested resource not found
+    post:
+      operationId: updateProjectById
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          description: ID of the target project
+          schema:
+            type: string
+          required: true
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectData"
+      responses:
+        '200':
+          description: Project successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  order:
+                    type: number
+                  color:
+                    type: string
+                  is_favourite:
+                    type: boolean
+                  view_style:
+                    type: string
+                    enum:
+                      - list
+                      - board
+              examples:
+                AllPropertiesUpdate:
+                  value:
+                    name: updated name
+                    order: 1
+                    color: 'red'
+                    is_favourite: true
+                PartialUpdate:
+                  value:
+                    name: New name
+                    color: blue
+                SingleFieldUpdate:
+                  value:
+                    color: lightgreen
+    delete:
+      operationId: deleteProjectById
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          schema:
+            type: string
+          in: path
+          required: true
+      responses:
+          '204':
+            description: successfully deleted project
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - success
+                        - failed
+
+  /tasks:
+    get:
+      operationId: getTasksList
+      tags:
+        - Tasks
+      parameters:
+        - name: project_id
+          description: filter by project_id if passed
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: section_id
+          description: filter by section_id if passed
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: label
+          description: filter by lable if passed
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskData"
+    post:
+      operationId: createNewTask
+      tags:
+        - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              type: object
+              properties:
+                content:
+                  type: string
+                description:
+                  type: string
+                labels:
+                  type: array
+                  items:
+                    type: string
+                due_string:
+                  type: string
+                project_id:
+                  type: string
+                section_id:
+                  type: string
+                parent_id:
+                  type: string
+      responses:
+        '200':
+          description: Task Created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskData"
+  
+  /tasks/{taskId}:
+    get:
+      operationId: getTaskById
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns the specific task data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskData"
+        '401':
+          description: Unauthorized Request
+        '404':
+            description: The requested task does not exist
+    delete:
+      operationId: deleteTaskById
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successfully deleted task
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  code:
+                    type: string
+    
