@@ -22,7 +22,7 @@ export const getStaticProps = (() => {
 export default function Home({ definitionsList }: HomeProps) {
   return (
     <main
-      className={`p-24 ${font.className}`}
+      className={`p-24 h-screen overflow-y-hidden ${font.className}`}
     >
       <header className="border-b-2 py-8">
         <h3 className="text-3xl mb-4">OpenAPI Definitions</h3>
