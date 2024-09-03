@@ -34,7 +34,7 @@ export default function Home({ definitionsList }: HomeProps) {
           {definitionsList.map(fileItem => {
             const fileName = fileItem.split('.').slice(0, -1).join('.')
             return (
-              <li>
+              <li key={fileName}>
                 <Link className="capitalize" href={`oad/${fileName}`}>{fileName}</Link>
               </li>
             )
