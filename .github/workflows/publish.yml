@@ -1,6 +1,5 @@
 # File: .github/workflows/publish.yml
 name: publish-to-github-pages
-description: Build and deploy the updated OAD
 on:
   workflow_dispatch:
 permissions:
