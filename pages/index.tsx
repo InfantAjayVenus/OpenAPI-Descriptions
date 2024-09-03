@@ -1,5 +1,5 @@
 import { getDefinitionsList } from "@/utils/getDefinitionsList";
-import { readdirSync } from "fs";
+import { GetStaticProps } from "next";
 import { Outfit } from "next/font/google";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ interface HomeProps {
   definitionsList: string[],
 }
 
-export function getStaticProps() {
+export const getStaticProps = (() => {
   const filesList = getDefinitionsList();
 
   return {
@@ -17,7 +17,7 @@ export function getStaticProps() {
       definitionsList: filesList
     }
   }
-}
+}) satisfies GetStaticProps<HomeProps>;
 
 export default function Home({ definitionsList }: HomeProps) {
   return (
