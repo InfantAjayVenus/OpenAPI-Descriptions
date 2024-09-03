@@ -2,10 +2,8 @@ import { getDefinitionsList } from "@/utils/getDefinitionsList";
 import { readdirSync } from "fs";
 import { Outfit } from "next/font/google";
 import Link from "next/link";
-import path from "path";
 
 const font = Outfit({ subsets: ["latin"] });
-const definitionsPath = path.join(process.cwd(), 'definitions');
 
 interface HomeProps {
   definitionsList: string[],
