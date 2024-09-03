@@ -15,7 +15,7 @@ export function getStaticPaths() {
     const filesList = getDefinitionsList();
 
     return {
-        paths: filesList.map(name => ({ name })),
+        paths: filesList.map(name => ({ params: {name} })),
         fallback: true
     }
 }
