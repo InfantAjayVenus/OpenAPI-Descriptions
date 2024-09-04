@@ -31,8 +31,8 @@ export default function Home({ definitionsList }: HomeProps) {
       </header>
       <section className="p-4">
         <ul>
-          {definitionsList.map(fileItem => {
-            const fileName = fileItem.split('.').slice(0, -1).join('.')
+          {definitionsList.map(fileName => {
+
             return (
               <li key={fileName}>
                 <Link className="capitalize" href={`oad/${fileName}`}>{fileName}</Link>
