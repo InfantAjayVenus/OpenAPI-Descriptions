@@ -37,7 +37,7 @@ export default function Definition({ name }: DefinitionProps) {
                 <h2 className="grow text-3xl capitalize">{name}</h2>
                 <Link href="/" className="flex items-center">Go Back To List <Image src={ChevronRight} alt="arrow right" /> </Link>
             </header>
-            <SwaggerUI url={`/definitions/${name}.yml`} />
+            <SwaggerUI url={`/OpenAPI-Descriptions/definitions/${name}.yml`} />
         </section>
     )
 }
