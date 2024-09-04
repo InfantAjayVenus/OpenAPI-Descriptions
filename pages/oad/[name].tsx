@@ -1,11 +1,11 @@
+import ChevronRight from '@/public/chevron-right.svg';
 import { getDefinitionsList } from "@/utils/getDefinitionsList";
-import { GetServerSidePropsContext, GetStaticProps, GetStaticPropsContext } from "next";
+import { GetStaticPropsContext } from "next";
 import { Outfit } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
 import SwaggerUI from "swagger-ui-react";
-import ChevronRight from '@/public/chevron-right.svg';
 import "swagger-ui-react/swagger-ui.css";
-import Image from "next/image";
 
 const font = Outfit({ subsets: ['latin'] });
 
