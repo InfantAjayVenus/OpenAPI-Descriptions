@@ -160,6 +160,7 @@ paths:
   /projects:
     get:
       operationId: getProjectsList
+      description: Returns a list of projects
       tags:
         - Projects
       responses:
@@ -175,6 +176,7 @@ paths:
           description: Unauthorized request
     post:
       operationId: createNewProject
+      description: Add a new project to the list
       tags:
         - Projects
       requestBody:
@@ -201,6 +203,7 @@ paths:
   /projects/{projectId}:
     get:
       operationId: getProjectById
+      description: Returns the specific project
       tags:
         - Projects
       parameters:
@@ -226,8 +229,9 @@ paths:
           description: User does not have permission to access this resource
         '404':
           description: Requested resource not found
-    post:
+    put:
       operationId: updateProjectById
+      description: Update an existing post
       tags:
         - Projects
       parameters:
@@ -279,6 +283,7 @@ paths:
                     color: lightgreen
     delete:
       operationId: deleteProjectById
+      description: Delete an existing project
       tags:
         - Projects
       parameters:
@@ -304,6 +309,7 @@ paths:
   /tasks:
     get:
       operationId: getTasksList
+      description: Returns a list of tasks
       tags:
         - Tasks
       parameters:
@@ -336,6 +342,7 @@ paths:
                   $ref: "#/components/schemas/TaskData"
     post:
       operationId: createNewTask
+      description: Add a new task to the list
       tags:
         - Tasks
       requestBody:
@@ -373,6 +380,7 @@ paths:
   /tasks/{taskId}:
     get:
       operationId: getTaskById
+      description: Returns the specific task
       tags:
         - Tasks
       parameters:
@@ -394,6 +402,7 @@ paths:
             description: The requested task does not exist
     delete:
       operationId: deleteTaskById
+      description: Delete an existing task
       tags:
         - Tasks
       parameters:
