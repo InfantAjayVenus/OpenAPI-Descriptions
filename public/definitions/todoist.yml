@@ -256,33 +256,47 @@ paths:
               schema:
                 type: object
                 properties:
-                  name:
+                  section_id:
                     type: string
                   order:
                     type: number
-                  color:
+                  content:
                     type: string
-                  is_favourite:
+                  description:
+                    type: string
+                  is_completed:
                     type: boolean
-                  view_style:
-                    type: string
-                    enum:
-                      - list
-                      - board
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  due:
+                    $ref: "#/components/schemas/DueDate"
               examples:
                 AllPropertiesUpdate:
                   value:
-                    name: updated name
+                    section_id: 1234
                     order: 1
-                    color: 'red'
-                    is_favourite: true
+                    content: New content
+                    description: New description
+                    is_completed: true
+                    labels:
+                      - label1
+                      - label2
+                    due:
+                      date: '2016-09-01'
+                      is_recurring: false
+                      datetime: '2016-09-01T12:00:00.000000Z'
+                      due_prompt: tomorrow at 12
+                      timezone: Europe/Moscow
                 PartialUpdate:
                   value:
-                    name: New name
-                    color: blue
+                    content: New name
+                    order: 1
+                    description: New description
                 SingleFieldUpdate:
                   value:
-                    color: lightgreen
+                    order: 1
     delete:
       operationId: deleteProjectById
       description: Delete an existing project
@@ -402,6 +416,57 @@ paths:
           description: Unauthorized Request
         '404':
             description: The requested task does not exist
+    put:
+      operationId: updateTaskById
+      description: Update an existing task
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskData"
+      responses:
+        '200':
+          description: Task successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  order:
+                    type: number
+                  color:
+                    type: string
+                  is_favourite:
+                    type: boolean
+                  view_style:
+                    type: string
+                    enum:
+                      - list
+                      - board
+              examples:
+                AllPropertiesUpdate:
+                  value:
+                    name: updated name
+                    order: 1
+                    color: 'red'
+                    is_favourite: true
+                PartialUpdate:
+                  value:
+                    name: New name
+                    color: blue
+                SingleFieldUpdate:
+                  value:
+                    color: lightgreen
     delete:
       operationId: deleteTaskById
       description: Delete an existing task
